@@ -13,7 +13,7 @@ def initName(username, firstname):
     if username==None:
         return firstname
     else:
-        return "@"+username
+        return "@" +username
 
 def get_question(message):
     try:
