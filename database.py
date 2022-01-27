@@ -29,7 +29,7 @@ def init_db(force: bool = False):
     )''')
     c.execute('''
             CREATE TABLE IF NOT EXISTS userdata(
-        	"username"	    TEXT,
+        	"firstname"	    TEXT,
         	"userid"        TEXT
         )''')
 
