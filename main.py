@@ -190,5 +190,5 @@ def mailingText2(message):
 
 
 if __name__ == '__main__':
-    database.init_db()
+    database.init_db(True)
     bot.polling(none_stop=True)
