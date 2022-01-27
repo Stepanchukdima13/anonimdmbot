@@ -1,3 +1,5 @@
+import time
+
 import telebot
 from telebot import types
 import database
@@ -20,7 +22,8 @@ def get_question(message):
         if str(message.text) and (message.text).startswith( '/start' ):
             markup = types.InlineKeyboardMarkup(row_width=2)
             btn_newQuestion = types.InlineKeyboardButton(text='Попробовать ещё раз', callback_data="new_question")
-            markup.add(btn_newQuestion)
+            btn_stop = types.InlineKeyboardButton(text='У меня нет вопросов', callback_data="stop_msg")
+            markup.add(btn_newQuestion, btn_stop)
             bot.send_message(message.chat.id, "Ошибка. Проверьте правильность вашего сообщения", reply_markup=markup)
         else:
             bot.send_message(userData[message.from_user.id]["recipientUserId"], "<b>Вам новое анонимное сообщение</b>\n\n"+
@@ -41,7 +44,8 @@ def get_question(message):
 
             markup = types.InlineKeyboardMarkup(row_width=2)
             btn_newQuestion = types.InlineKeyboardButton(text='Задать ещё один вопрос', callback_data="new_question")
-            markup.add(btn_newQuestion)
+            btn_stop = types.InlineKeyboardButton(text='У меня нет вопросов', callback_data="stop_msg")
+            markup.add(btn_newQuestion,btn_stop)
             database.add_question(firstname=message.from_user.first_name,
                                   username=initName(message.from_user.username, message.from_user.first_name),
                                   userid=message.from_user.id,
@@ -65,17 +69,12 @@ def get_question(message):
 
 @bot.message_handler(commands=['start' ,'share'])
 def start(message):
-    print(message.chat.id)
-    print(message.chat)
     if message.chat.type != "private":
         bot.send_message(message.chat.id, "Бот работает только в <b>приватном</b> чате!",parse_mode="html")
         return
-
-    print(str(datetime.datetime.now()))
-    #database.add_user(initName(message.from_user.username, message.from_user.first_name),message.chat.id)
+    database.add_user(initName(message.from_user.username, message.from_user.first_name),message.chat.id)
     if message.text != "/start" and message.text != "/share":
         try:
-            print(1)
             recipientData = bot.get_chat(int(message.text[7:]))
             userData[message.from_user.id] = {"fromUserId": message.from_user.id,
                                               "fromUsername": initName(message.from_user.username, message.from_user.first_name),
@@ -104,12 +103,30 @@ def inlin(call):
             bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
             bot.register_next_step_handler(
                 bot.send_message(call.from_user.id,
-                                 f"Вы можете написать новое сообщение для " +userData[call.from_user.id]["recipientUsername"]+ " и оно будет абсолютно анонимное!\n\n"
+                                 f"Вы можете написать новое сообщение для " + userData[call.from_user.id]["recipientUsername"]+ " и оно будет абсолютно анонимное!\n\n"
                                  f"Напиши сюда все, что о нем думаешь в одном сообщении и через несколько мгновений он его получит, но не будет знать от кого оно."),
                 get_question)
         except KeyError:
+            e = sys.exc_info()[1]
+            print(e.args[0])
             bot.send_message(call.message.chat.id, "<b>Ошибка</b> пользователь, которому вы пытаетесь отправить сообщение не найден.\n"
                                                    "Попробуйте ещё раз!",parse_mode="html")
+    elif call.data == "stop_msg":
+        try:
+
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
+                          text="Вы больше не отправляете сообщения пользователю "+ initName(userData[call.message.chat.id]["recipientUsername"][1:] ,userData[call.message.chat.id]["recipientFirstname"]))
+            del userData[call.message.chat.id]["recipientUsername"]
+            del userData[call.message.chat.id]["recipientFirstname"]
+            del userData[call.message.chat.id]["recipientUserId"]
+        except KeyError:
+            e = sys.exc_info()[1]
+            print(e.args[0])
+            bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
+            bot.send_message(call.message.chat.id,
+                             "<b>Ошибка</b> пользователь, которому вы пытаетесь отправить сообщение не найден.\n"
+                             "Попробуйте ещё раз!", parse_mode="html")
+
     elif call.data == "startMailning":
         bot.delete_message(call.message.chat.id, call.message.id)
         users_id = database.get_all_userid()
@@ -126,6 +143,7 @@ def inlin(call):
 
 @bot.message_handler(commands=['mailing'])
 def mailing(message):
+    del mailingText, mailingPhoto
     if message.from_user.id == 502391525:
         bot.register_next_step_handler(
             bot.send_message(message.chat.id, "Отправьте текст сообщения для рассылки:"), mailing2
