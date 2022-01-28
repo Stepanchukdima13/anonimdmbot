@@ -94,6 +94,11 @@ f"https://t.me/anonim_msg_bot?start={message.chat.id}\n\n"
 "Ссылку добавлять в своём профиле вот так.\n"
 "Это можно сделать через кнопку «<b>Редактировать профиль</b>»\n", parse_mode="html" )
 
+
+@bot.message_handler(commands=['gg'])
+def nms(message):
+    bot.send_message(message.chat.id, "1")
+
 @bot.callback_query_handler(func=lambda call: True)
 def inlin(call):
     if call.data == "new_question":
