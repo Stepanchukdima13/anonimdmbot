@@ -4,7 +4,7 @@ from sqlite3 import Error
 def get_connection():
     global connection
     try:
-        connection = sqlite3.connect("database.db")
+        connection = sqlite3.connect("database.db", check_same_thread=False)
     except Error as e:
         print(f"The error '{e}' occurred")
     return connection
