@@ -55,7 +55,7 @@ def get_question(message):
 
             bot.send_message(message.chat.id, "Готово, твое сообщение доставлено.\n\n"
                                               "Хотите отправить ещё одно сообщение для "+ userData[message.chat.id]["recipientUsername"]+"?", reply_markup=markup)
-    except TypeError:
+    except (TypeError, AttributeError,KeyError):
         e = sys.exc_info()[1]
         print(e.args[0])
         markup = types.InlineKeyboardMarkup(row_width=2)
@@ -197,3 +197,5 @@ def mailingText2(message):
 if __name__ == '__main__':
     database.init_db()
     bot.polling(none_stop=True)
+
+#TypeError, AttributeError,KeyError
