@@ -17,7 +17,7 @@ def initName(username, firstname):
 
 def get_question(message):
     try:
-        if str(message.text) and (message.text).startswith( '/start' ):
+        if str(message.text) and (message.text).startswith( '/start' ) or str(message.text) and (message.text).startswith( '/share' ):
             markup = types.InlineKeyboardMarkup(row_width=2)
             btn_newQuestion = types.InlineKeyboardButton(text='Попробовать ещё раз', callback_data="new_question")
             btn_stop = types.InlineKeyboardButton(text='У меня нет вопросов', callback_data="stop_msg")
