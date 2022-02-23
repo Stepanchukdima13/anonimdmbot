@@ -3,7 +3,7 @@ from telebot import types
 import database
 import datetime
 import sys
-bot = telebot.TeleBot('5186990720:AAGKBumrpZVQJ46vP-OHLdm5M3og3id8f3k')
+bot = telebot.TeleBot('1487684851:AAFa_NW8uiy9NhgpmKG8qV9kwEnuDa4eY6s')
 print("Start")
 
 userData = {}
