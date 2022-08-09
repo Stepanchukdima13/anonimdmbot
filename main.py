@@ -3,7 +3,7 @@ from telebot import types
 import database
 import datetime
 import sys
-bot = telebot.TeleBot('5186990720:AAGKBumrpZVQJ46vP-OHLdm5M3og3id8f3k')
+bot = telebot.TeleBot('5530913099:AAE4215DRlWv2084mVIuLp2Bv-1z-8IXbvY')
 print("Start")
 
 userData = {}
@@ -90,8 +90,8 @@ def start(message):
         bot.send_message(message.chat.id,"<b>Привет</b> 👋\n\n"
 "Этот бот умеет принимать анонимные сообщения. Размести ссылку у себя в описании профиля <b>Instagram/Telegram/VK</b> и получай анонимные сообщения прямо в этот чат.\n\n"
 "Вот твоя ссылка 👇\n\n"
-f"https://t.me/anonim_msg_bot?start={message.chat.id}\n\n"
-"Ссылку добавлять в своём профиле вот так.\n"
+f"https://t.me/anon_mes_bot?start={message.chat.id}\n\n"
+"Ссылку добавлять в своём профиле.\n"
 "Это можно сделать через кнопку «<b>Редактировать профиль</b>»\n", parse_mode="html" )
 
 @bot.callback_query_handler(func=lambda call: True)
