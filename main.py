@@ -19,7 +19,7 @@ def get_question(message):
     try:
         if str(message.text) and (message.text).startswith( '/start' ):
             markup = types.InlineKeyboardMarkup(row_width=2)
-            btn_newQuestion = types.InlineKeyboardButton(text='Спробувати ще раз.', callback_data="new_question")
+            btn_newQuestion = types.InlineKeyboardButton(text='Задати ще одне питання.', callback_data="new_question")
             btn_stop = types.InlineKeyboardButton(text='У мене немає запитань.', callback_data="stop_msg")
             markup.add(btn_newQuestion, btn_stop)
             bot.send_message(message.chat.id, "Помилка. Перевірте правильність вашого повідомлення.", reply_markup=markup)
@@ -87,7 +87,7 @@ def start(message):
             bot.send_message(message.chat.id, "<b>Помилка</b> користувач, якому ви намагаєтеся надіслати повідомлення, не знайдений.\n"
                                                    "Спробуйте ще раз!",parse_mode="html")
     else:
-        bot.send_message(message.chat.id,"<b>Привет</b> 👋\n\n"
+        bot.send_message(message.chat.id,"<b>Привіт</b> 👋\n\n"
 "Цей робот може приймати анонімні повідомлення. Розмісти посилання у себе в описі профілю <b>Instagram/Telegram/Facebook</b> та отримуй анонімні повідомлення прямо в цей чат.\n\n"
 "Ось твоє посилання 👇\n\n"
 f"https://t.me/anon_sms_bot?start={message.chat.id}\n\n"
