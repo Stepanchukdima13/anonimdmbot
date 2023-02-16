@@ -1,6 +1,6 @@
 import telebot
 from telebot import types
-import database
+#import database
 import datetime
 import sys
 bot = telebot.TeleBot('5841491995:AAGm02QcwRSHe78M1YoV25r1mZGOlbs2LM8')
@@ -44,14 +44,14 @@ def get_question(message):
             btn_newQuestion = types.InlineKeyboardButton(text='Задати ще одне питання.', callback_data="new_question")
             btn_stop = types.InlineKeyboardButton(text='У мене немає запитань.', callback_data="stop_msg")
             markup.add(btn_newQuestion,btn_stop)
-            database.add_question(firstname=message.from_user.first_name,
-                                  username=initName(message.from_user.username, message.from_user.first_name),
-                                  userid=message.from_user.id,
-                                  recipientFirstname= userData[message.from_user.id]["recipientFirstname"],
-                                  recipientUsername=userData[message.from_user.id]["recipientUsername"],
-                                  recipientUserId = userData[message.from_user.id]["recipientUserId"],
-                                  question=message.text,
-                                  time=str(datetime.datetime.now()))
+#             database.add_question(firstname=message.from_user.first_name,
+#                                   username=initName(message.from_user.username, message.from_user.first_name),
+#                                   userid=message.from_user.id,
+#                                   recipientFirstname= userData[message.from_user.id]["recipientFirstname"],
+#                                   recipientUsername=userData[message.from_user.id]["recipientUsername"],
+#                                   recipientUserId = userData[message.from_user.id]["recipientUserId"],
+#                                   question=message.text,
+#                                   time=str(datetime.datetime.now()))
 
             bot.send_message(message.chat.id, "Готово, твоє повідомлення доставлено.\n\n"
                                               "Хочете відправити ще одне повідомлення для "+ userData[message.chat.id]["recipientUsername"]+"?", reply_markup=markup)
@@ -70,7 +70,7 @@ def start(message):
     if message.chat.type != "private":
         bot.send_message(message.chat.id, "Бот працює тільки у <b>приватному</b> чаті!",parse_mode="html")
         return
-    database.add_user(initName(message.from_user.username, message.from_user.first_name),message.chat.id)
+    #database.add_user(initName(message.from_user.username, message.from_user.first_name),message.chat.id)
     if message.text != "/start" and message.text != "/share":
         try:
             recipientData = bot.get_chat(int(message.text[7:]))
@@ -190,5 +190,5 @@ def mailingText2(message):
 
 
 if __name__ == '__main__':
-    database.init_db()
+    #database.init_db()
     bot.polling(none_stop=True)
