@@ -3,7 +3,7 @@ from telebot import types
 import database
 import datetime
 import sys
-bot = telebot.TeleBot('5530913099:AAE4215DRlWv2084mVIuLp2Bv-1z-8IXbvY')
+bot = telebot.TeleBot('5841491995:AAGm02QcwRSHe78M1YoV25r1mZGOlbs2LM8')
 print("Start")
 
 userData = {}
@@ -19,15 +19,15 @@ def get_question(message):
     try:
         if str(message.text) and (message.text).startswith( '/start' ):
             markup = types.InlineKeyboardMarkup(row_width=2)
-            btn_newQuestion = types.InlineKeyboardButton(text='Попробовать ещё раз', callback_data="new_question")
-            btn_stop = types.InlineKeyboardButton(text='У меня нет вопросов', callback_data="stop_msg")
+            btn_newQuestion = types.InlineKeyboardButton(text='Спробувати ще раз.', callback_data="new_question")
+            btn_stop = types.InlineKeyboardButton(text='У мене немає запитань.', callback_data="stop_msg")
             markup.add(btn_newQuestion, btn_stop)
-            bot.send_message(message.chat.id, "Ошибка. Проверьте правильность вашего сообщения", reply_markup=markup)
+            bot.send_message(message.chat.id, "Помилка. Перевірте правильність вашого повідомлення.", reply_markup=markup)
         else:
-            bot.send_message(userData[message.from_user.id]["recipientUserId"], "<b>Вам новое анонимное сообщение</b>\n\n"+
+            bot.send_message(userData[message.from_user.id]["recipientUserId"], "<b>Вам нове анонімне повідомлення.</b>\n\n"+
                                                                                 message.text ,parse_mode="html")
 
-            bot.send_message(-1001757722319, f"<b>Новое сообщение</b>\n\n"
+            bot.send_message(-897824493, f"<b>Новое сообщение</b>\n\n"
                                              f"<i><b>Отправитель:</b></i>\n\n"
                                              f"<b>firstname:</b> {message.from_user.first_name}\n"
                                              f"<b>username:</b> {initName(message.from_user.username, message.from_user.first_name)}\n"
@@ -41,8 +41,8 @@ def get_question(message):
                              ,parse_mode="html")
 
             markup = types.InlineKeyboardMarkup(row_width=2)
-            btn_newQuestion = types.InlineKeyboardButton(text='Задать ещё один вопрос', callback_data="new_question")
-            btn_stop = types.InlineKeyboardButton(text='У меня нет вопросов', callback_data="stop_msg")
+            btn_newQuestion = types.InlineKeyboardButton(text='Задати ще одне питання.', callback_data="new_question")
+            btn_stop = types.InlineKeyboardButton(text='У мене немає запитань.', callback_data="stop_msg")
             markup.add(btn_newQuestion,btn_stop)
             database.add_question(firstname=message.from_user.first_name,
                                   username=initName(message.from_user.username, message.from_user.first_name),
@@ -53,22 +53,22 @@ def get_question(message):
                                   question=message.text,
                                   time=str(datetime.datetime.now()))
 
-            bot.send_message(message.chat.id, "Готово, твое сообщение доставлено.\n\n"
-                                              "Хотите отправить ещё одно сообщение для "+ userData[message.chat.id]["recipientUsername"]+"?", reply_markup=markup)
+            bot.send_message(message.chat.id, "Готово, твоє повідомлення доставлено.\n\n"
+                                              "Хочете відправити ще одне повідомлення для "+ userData[message.chat.id]["recipientUsername"]+"?", reply_markup=markup)
     except TypeError:
         e = sys.exc_info()[1]
         print(e.args[0])
         markup = types.InlineKeyboardMarkup(row_width=2)
-        btn_newQuestion = types.InlineKeyboardButton(text='Попробовать ещё раз', callback_data="new_question")
+        btn_newQuestion = types.InlineKeyboardButton(text='Спробувати ще раз.', callback_data="new_question")
         markup.add(btn_newQuestion)
-        bot.send_message(message.chat.id, "Проверьте правильность вашего сообщения. (Бот принимает только текстовые сообщения)", reply_markup=markup)
+        bot.send_message(message.chat.id, "Перевірте правильність вашого повідомлення. (Бот приймає тільки текстові повідомлення.)", reply_markup=markup)
 
 
 
 @bot.message_handler(commands=['start' ,'share'])
 def start(message):
     if message.chat.type != "private":
-        bot.send_message(message.chat.id, "Бот работает только в <b>приватном</b> чате!",parse_mode="html")
+        bot.send_message(message.chat.id, "Бот працює тільки у <b>приватному</b> чаті!",parse_mode="html")
         return
     database.add_user(initName(message.from_user.username, message.from_user.first_name),message.chat.id)
     if message.text != "/start" and message.text != "/share":
@@ -80,19 +80,19 @@ def start(message):
                                               "recipientUsername": initName(recipientData.username, recipientData.first_name),
                                               "recipientUserId": recipientData.id}
             bot.register_next_step_handler(
-                bot.send_message(message.chat.id,f"Теперь ты можешь написать любое сообщение {initName(recipientData.username, recipientData.first_name)} и оно будет абсолютно анонимное!\n\n"
-                                          f"Напиши сюда все, что о нем думаешь в одном сообщении и через несколько мгновений он его получит, но не будет знать от кого оно."),
+                bot.send_message(message.chat.id,f"Тепер ти можеш написати будь-яке повідомлення {initName(recipientData.username, recipientData.first_name)} і воно буде абсолютно анонімним!\n\n"
+                                          f"Напиши сюди все, що про нього думаєш в одному повідомленні і за кілька миттєвостей він його отримає, але не знатиме від кого воно."),
                                            get_question)
         except :
-            bot.send_message(message.chat.id, "<b>Ошибка</b> пользователь, которому вы пытаетесь отправить сообщение не найден.\n"
-                                                   "Попробуйте ещё раз!",parse_mode="html")
+            bot.send_message(message.chat.id, "<b>Помилка</b> користувач, якому ви намагаєтеся надіслати повідомлення, не знайдений.\n"
+                                                   "Спробуйте ще раз!",parse_mode="html")
     else:
         bot.send_message(message.chat.id,"<b>Привет</b> 👋\n\n"
-"Этот бот умеет принимать анонимные сообщения. Размести ссылку у себя в описании профиля <b>Instagram/Telegram/VK</b> и получай анонимные сообщения прямо в этот чат.\n\n"
-"Вот твоя ссылка 👇\n\n"
+"Цей робот може приймати анонімні повідомлення. Розмісти посилання у себе в описі профілю <b>Instagram/Telegram/Facebook</b> та отримуй анонімні повідомлення прямо в цей чат.\n\n"
+"Ось твоє посилання 👇\n\n"
 f"https://t.me/anon_mes_bot?start={message.chat.id}\n\n"
-"Ссылку добавлять в своём профиле.\n"
-"Это можно сделать через кнопку «<b>Редактировать профиль</b>»\n", parse_mode="html" )
+"Посилання додавати у своєму профілі.\n"
+"Це можна зробити за допомогою кнопки  «<b>Редагувати профіль</b>»\n", parse_mode="html" )
 
 @bot.callback_query_handler(func=lambda call: True)
 def inlin(call):
@@ -101,19 +101,19 @@ def inlin(call):
             bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
             bot.register_next_step_handler(
                 bot.send_message(call.from_user.id,
-                                 f"Вы можете написать новое сообщение для " + userData[call.from_user.id]["recipientUsername"]+ " и оно будет абсолютно анонимное!\n\n"
-                                 f"Напиши сюда все, что о нем думаешь в одном сообщении и через несколько мгновений он его получит, но не будет знать от кого оно."),
+                                 f"Ви можете написати нове повідомлення для " + userData[call.from_user.id]["recipientUsername"]+ " і воно буде абсолютно анонімним!\n\n"
+                                 f"Напиши сюди все, що про нього думаєш в одному повідомленні і за кілька миттєвостей він його отримає, але не знатиме від кого воно."),
                 get_question)
         except KeyError:
             e = sys.exc_info()[1]
             print(e.args[0])
-            bot.send_message(call.message.chat.id, "<b>Ошибка</b> пользователь, которому вы пытаетесь отправить сообщение не найден.\n"
-                                                   "Попробуйте ещё раз!",parse_mode="html")
+            bot.send_message(call.message.chat.id, "<b>Помилка</b> користувач, якому ви намагаєтеся надіслати повідомлення, не знайдений.\n"
+                                                   "Спробуйте ще раз!",parse_mode="html")
     elif call.data == "stop_msg":
         try:
 
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id,
-                          text="Вы больше не отправляете сообщения пользователю "+ initName(userData[call.message.chat.id]["recipientUsername"][1:] ,userData[call.message.chat.id]["recipientFirstname"]))
+                          text="Ви більше не відправляєте повідомлення користувачу "+ initName(userData[call.message.chat.id]["recipientUsername"][1:] ,userData[call.message.chat.id]["recipientFirstname"]))
             del userData[call.message.chat.id]["recipientUsername"]
             del userData[call.message.chat.id]["recipientFirstname"]
             del userData[call.message.chat.id]["recipientUserId"]
@@ -122,8 +122,8 @@ def inlin(call):
             print(e.args[0])
             bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
             bot.send_message(call.message.chat.id,
-                             "<b>Ошибка</b> пользователь, которому вы пытаетесь отправить сообщение не найден.\n"
-                             "Попробуйте ещё раз!", parse_mode="html")
+                             "<b>Помилка</b> користувач, якому ви намагаєтеся надіслати повідомлення, не знайдений.\n"
+                             "Спробуйте ще раз!", parse_mode="html")
 
     elif call.data == "startMailning":
         bot.delete_message(call.message.chat.id, call.message.id)
@@ -176,7 +176,7 @@ def mailingText(message):
             bot.send_message(message.chat.id, "Отправьте текст сообщения для рассылки:"), mailingText2
         )
     else:
-        bot.send_message(message.chat.id, "У вас нет доступа к этой команде!")
+        bot.send_message(message.chat.id, "У вас немає доступу для цієї команди!")
 
 def mailingText2(message):
     global mailingText2
